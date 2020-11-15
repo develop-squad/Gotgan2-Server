@@ -241,11 +241,6 @@ foreach ($rentLateJsonResult as &$dueObject) {
         $emailMessage = "대여하신 물품이 반납일이 지났습니다";
         sendEmail($dueObject["rent_user_email"], $emailTitle, $emailMessage);
     }
-    if (isset($dueObject["rent_user_uuid"])) {
-        $fcmTitle = "대여 미반납 알림";
-        $fcmMessage = "대여하신 물품이 반납일이 지났습니다";
-        sendFCM($dueObject["rent_user_uuid"], $fcmTitle, $fcmMessage, $GOOGLE_API_KEY);
-    }
 }
 unset($dueObject);
 
