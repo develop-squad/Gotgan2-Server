@@ -2,6 +2,8 @@
 
 class RentManager extends Singleton {
 
+    protected static $instance;
+
     public function getRents($params) : array {
         // $rent_delayed
         // $rent_status

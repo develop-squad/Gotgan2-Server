@@ -2,6 +2,8 @@
 
 class ProductManager extends Singleton {
 
+    protected static $instance;
+
     public function getProducts($params) : array {
         // $productGroupIndex
         // $productIndex

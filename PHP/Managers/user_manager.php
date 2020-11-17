@@ -2,6 +2,8 @@
 
 class UserManager extends Singleton {
 
+    protected static $instance;
+
     public function getUsers($params) : array {
         // $userGroupIndex
         // $userIndex

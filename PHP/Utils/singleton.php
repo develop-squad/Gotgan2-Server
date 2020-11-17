@@ -1,22 +1,23 @@
 <?php
 
-class Singleton {
+abstract class Singleton {
 
-    public static function getInstance()
-    {
-        static $instance = null;
-        if (null === $instance) {
-            $instance = new static();
-        }
+    protected static $instance;
 
-        return $instance;
+    private function __construct() {
+
     }
 
-    protected function __construct() { }
+    final protected function __clone() {
 
-    private function __clone() { }
+    }
 
-    private function __wakeup() { }
+    public static function getInstance() {
+        if (!static::$instance instanceof static) {
+            static::$instance = new static();
+        }
+        return static::$instance;
+    }
 
 }
 
