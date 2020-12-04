@@ -2,6 +2,7 @@
 
 class Rent {
 
+    const RENT = "rents";
     const RENT_INDEX = "rent_index";
     const RENT_USER = "rent_user";
     const RENT_PRODUCT = "rent_product";
@@ -9,6 +10,22 @@ class Rent {
     const RENT_TIME_START = "rent_time_start";
     const RENT_TIME_END = "rent_time_end";
     const RENT_TIME_RETURN = "rent_time_return";
+    const RENT_DELAYED = "rent_delayed";
+    const RENT_USER_INDEX = "rent_user_index";
+    const RENT_USER_NAME = "rent_user_name";
+    const RENT_USER_EMAIL = "rent_user_email";
+    const RENT_USER_UUID = "rent_user_uuid";
+    const RENT_USER_ID = "rent_user_id";
+    const RENT_PRODUCT_INDEX = "rent_product_index";
+    const RENT_PRODUCT_GROUP_INDEX = "rent_product_group_index";
+    const RENT_PRODUCT_GROUP_NAME = "rent_product_group_name";
+    const RENT_PRODUCT_NAME = "rent_product_name";
+    const RENT_PRODUCT_BARCODE = "rent_product_barcode";
+
+    const RENT_MESSAGE_DUE_TITLE = "대여 반납일 알림";
+    const RENT_MESSAGE_DUE_CONTENT = "오늘은 대여하신 물품의 반납일입니다";
+    const RENT_MESSAGE_LATE_TITLE = "대여 미반납 알림";
+    const RENT_MESSAGE_LATE_CONTENT = "대여하신 물품이 반납일이 지났습니다";
 
     private $rentIndex;
     private $rentUser;
@@ -18,7 +35,8 @@ class Rent {
     private $rentTimeEnd;
     private $rentTimeReturn;
 
-    public function __construct($params) {
+    public function __construct($params = null) {
+        if (!isset($params)) return;
         $this->rentIndex = $params[self::RENT_INDEX];
         $this->rentUser = $params[self::RENT_USER];
         $this->rentProduct = $params[self::RENT_PRODUCT];

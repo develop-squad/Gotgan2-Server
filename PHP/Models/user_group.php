@@ -2,13 +2,18 @@
 
 class UserGroup {
 
+    const USER_GROUP = "user_group";
     const USER_GROUP_INDEX = "user_group_index";
     const USER_GROUP_NAME = "user_group_name";
+    const GROUPS = "groups";
+    const GROUP_INDEX = "group_index";
+    const GROUP_NAME = "group_name";
 
     private $userGroupIndex;
     private $userGroupName;
 
-    public function __construct($params) {
+    public function __construct($params = null) {
+        if (!isset($params)) return;
         $this->userGroupIndex = $params[self::USER_GROUP_INDEX];
         $this->userGroupName = $params[self::USER_GROUP_NAME];
     }

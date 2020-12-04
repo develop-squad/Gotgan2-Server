@@ -2,6 +2,7 @@
 
 class LogType {
 
+    const LOG_TYPE = "logtype";
     const LOG_TYPE_INDEX = "log_type_index";
     const LOG_TYPE_NAME = "log_type_name";
     const LOG_TYPE_LEVEL = "log_type_level";
@@ -33,7 +34,8 @@ class LogType {
     const TYPE_SEND_MAIL = 21;
     const TYPE_SEND_FCM = 22;
 
-    public function __construct($params) {
+    public function __construct($params = null) {
+        if (!isset($params)) return;
         $this->logTypeIndex = $params[self::LOG_TYPE_INDEX];
         $this->logTypeName = $params[self::LOG_TYPE_NAME];
         $this->logTypeLevel = $params[self::LOG_TYPE_LEVEL];

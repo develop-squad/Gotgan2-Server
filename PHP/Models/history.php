@@ -2,6 +2,8 @@
 
 class History {
 
+    const HISTORY = "history";
+    const HISTORIES = "histories";
     const HISTORY_INDEX = "history_index";
     const HISTORY_TIME = "history_time";
     const HISTORY_USER_TOTAL = "history_user_total";
@@ -18,7 +20,8 @@ class History {
     private $historyProductRent;
     private $historyRentTotal;
 
-    public function __construct($params) {
+    public function __construct($params = null) {
+        if (!isset($params)) return;
         $this->historyIndex = $params[self::HISTORY_INDEX];
         $this->historyTime = $params[self::HISTORY_TIME];
         $this->historyUserTotal = $params[self::HISTORY_USER_TOTAL];

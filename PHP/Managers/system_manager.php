@@ -2,6 +2,7 @@
 
 class SystemManager extends Singleton {
 
+    const SYSTEM = "SYSTEM";
     const SYSTEM_MASTER = "SYSTEM_ON";
     const SYSTEM_LOGIN = "SYSTEM_LOGIN";
     const SYSTEM_RENT = "SYSTEM_RENT";
@@ -22,43 +23,44 @@ class SystemManager extends Singleton {
     private function checkSystemSwitch($switchType) : int {
         # execute system switch query
         try {
-            $DB_SQL = "SELECT `system_on`, `system_login`, `system_rent`, `system_message` FROM `System` LIMIT 1";
-            $DB_STMT = $DB->prepare($DB_SQL);
+            $dbQuery = "SELECT `".self::SYSTEM_MASTER."`, `".self::SYSTEM_LOGIN."`, `".self::SYSTEM_RENT."`, `".self::SYSTEM_MESSAGE."` FROM `".self::SYSTEM."` LIMIT 1";
+            $db = DatabaseManager::getInstance()->getConnection();
+            $dbStatement = $db->prepare($dbQuery);
             # database query not ready
-            if (!$DB_STMT) {
-                printOutput(-2, "DB QUERY FAILURE : ".$DB->error);
+            if (!$dbStatement) {
+                printOutput(-2, "DB QUERY FAILURE : ".$db->error);
                 exit();
             }
-            $DB_STMT->execute();
-            if ($DB_STMT->errno != 0) {
+            $dbStatement->execute();
+            if ($dbStatement->errno != 0) {
                 # system switch query error
-                printOutput(-4, "SYSTEM SWITCH FAILURE : ".$DB_STMT->error);
+                printOutput(-4, "SYSTEM SWITCH FAILURE : ".$dbStatement->error);
                 exit();
             }
-            $TEMP_SYSTEM_ON = 0;
-            $TEMP_SYSTEM_LOGIN = 0;
-            $TEMP_SYSTEM_RENT = 0;
-            $TEMP_SYSTEM_MESSAGE = 0;
-            $DB_STMT->bind_result($TEMP_SYSTEM_ON, $TEMP_SYSTEM_LOGIN, $TEMP_SYSTEM_RENT, $TEMP_SYSTEM_MESSAGE);
-            $DB_STMT->fetch();
-            $DB_STMT->close();
+            $systemMaster = 0;
+            $systemLogin = 0;
+            $systemRent = 0;
+            $systemMessage = 0;
+            $dbStatement->bind_result($systemMaster, $systemLogin, $systemRent, $systemMessage);
+            $dbStatement->fetch();
+            $dbStatement->close();
         } catch(Exception $e) {
             # system switch query error
-            printOutput(-2, "DB QUERY FAILURE : ".$DB->error);
+            printOutput(-2, "DB QUERY FAILURE : ".$db->error);
             exit();
         }
 
         if ($switchType == self::SWITCH_MASTER) {
-            return $TEMP_SYSTEM_ON;
+            return $systemMaster;
         }
         if ($switchType == self::SWITCH_LOGIN) {
-            return $TEMP_SYSTEM_LOGIN;
+            return $systemLogin;
         }
         if ($switchType == self::SWITCH_RENT) {
-            return $TEMP_SYSTEM_RENT;
+            return $systemRent;
         }
         if ($switchType == self::SWITCH_MESSAGE) {
-            return $TEMP_SYSTEM_MESSAGE;
+            return $systemMessage;
         }
         return -1;
     }
@@ -79,20 +81,57 @@ class SystemManager extends Singleton {
         return $this->checkSystemSwitch(self::SWITCH_MESSAGE);
     }
 
-    public function switchSystemMaster($masterSwitch) {
+    private function switchSystemSwitch($switchType, $switchValue) {
+        # execute system switch query
+        try {
+            $dbQuery = "";
+            if ($switchType == self::SWITCH_MASTER) {
+                $dbQuery = "UPDATE `System` SET `system_on` = ".$switchValue;
+            }
+            if ($switchType == self::SWITCH_LOGIN) {
+                $dbQuery = "UPDATE `System` SET `system_login` = ".$switchValue;
+            }
+            if ($switchType == self::SWITCH_RENT) {
+                $dbQuery = "UPDATE `System` SET `system_rent` = ".$switchValue;
+            }
+            if ($switchType == self::SWITCH_MESSAGE) {
+                $dbQuery = "UPDATE `System` SET `system_message` = ".$switchValue;
+            }
+            $db = DatabaseManager::getInstance()->getConnection();
+            $dbStatement = $db->prepare($dbQuery);
+            # database query not ready
+            if (!$dbStatement) {
+                printOutput(-2, "DB QUERY FAILURE : ".$db->error);
+                exit();
+            }
+            $dbStatement->execute();
+            if ($dbStatement->errno != 0) {
+                # system switch query error
+                printOutput(-4, "SYSTEM SWITCH FAILURE : ".$dbStatement->error);
+                exit();
+            }
+            $dbStatement->close();
+        } catch(Exception $e) {
+            # system switch query error
+            printOutput(-2, "DB QUERY FAILURE : ".$db->error);
+            exit();
+        }
+    }
 
+    public function switchSystemMaster($masterSwitch) {
+        self::switchSystemSwitch(self::SWITCH_MASTER, $masterSwitch);
     }
 
     public function switchSystemLogin($loginSwitch) {
-
+        self::switchSystemSwitch(self::SWITCH_LOGIN, $loginSwitch);
     }
 
     public function switchSystemRent($rentSwitch) {
-
+        self::switchSystemSwitch(self::SWITCH_RENT, $rentSwitch);
     }
 
     public function switchSystemMessage($messageSwitch) {
-
+        self::switchSystemSwitch(self::SWITCH_MESSAGE, $messageSwitch);
     }
 
     public function sendEmail($userEmail, $title, $message) {
@@ -100,6 +139,43 @@ class SystemManager extends Singleton {
         $headers .= 'From: DEVX <no-reply@devx.kr>' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
         mail($userEmail, $title, $message, $headers);
+    }
+
+    public function sendEmailByApi($title, $content, $params, $validation = null) {
+        # execute user email query
+        try {
+            $dbQuery = "SELECT `user_id`, `user_email` FROM `Users` WHERE 1=1";
+            if (isset($params[User::USER_INDEX])) {
+                $dbQuery .= " AND `user_index` = ".$params[User::USER_INDEX];
+            }
+            $db = DatabaseManager::getInstance()->getConnection();
+            $dbStatement = $db->prepare($dbQuery);
+            # database query not ready
+            if (!$dbStatement) {
+                printOutput(-2, "DB QUERY FAILURE : " . $db->error);
+                exit();
+            }
+            $dbStatement->execute();
+            if ($dbStatement->errno != 0) {
+                printOutput(-2, "DB QUERY FAILURE : " . $db->error);
+                exit();
+            }
+            $mailData = array();
+            $dbStatement->bind_result($mailData[User::USER_ID], $mailData[User::USER_EMAIL]);
+            while ($dbStatement->fetch()) {
+                SystemManager::getInstance()->sendEmail($mailData[User::USER_EMAIL], $title, $content);
+            }
+            $dbStatement->close();
+        } catch (Exception $e) {
+            # user email query error
+            printOutput(-2, "DB QUERY FAILURE : ".$db->error);
+            exit();
+        }
+
+        # email log
+        if (isset($validation)) {
+            LogManager::getInstance()->addLog([LOG::LOG_USER => $validation[User::USER_INDEX], LOG::LOG_TYPE => LogType::TYPE_SEND_MAIL]);
+        }
     }
 
 }

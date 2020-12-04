@@ -2,6 +2,7 @@
 
 class User {
 
+    const USER = "users";
     const USER_INDEX = "user_index";
     const USER_ID = "user_id";
     const USER_PW = "user_pw";
@@ -30,7 +31,8 @@ class User {
     private $userCreated;
     private $userSession;
 
-    public function __construct($params) {
+    public function __construct($params = null) {
+        if (!isset($params)) return;
         $this->userIndex = $params[self::USER_INDEX];
         $this->userID = $params[self::USER_ID];
         $this->userPW = $params[self::USER_PW];
@@ -44,6 +46,21 @@ class User {
         $this->userPhone = $params[self::USER_PHONE];
         $this->userCreated = $params[self::USER_CREATED];
         $this->userSession = $params[self::USER_SESSION];
+    }
+
+    public function printUser() : array {
+        return [self::USER_INDEX => $this->userIndex,
+            self::USER_ID => $this->userID,
+            self::USER_LEVEL => $this->userLevel,
+            self::USER_NAME => $this->userName,
+            self::USER_SID => $this->userSid,
+            self::USER_BLOCK => $this->userBlock,
+            self::USER_UUID => $this->userUuid,
+            self::USER_GROUP => $this->userGroup,
+            self::USER_EMAIL => $this->userEmail,
+            self::USER_PHONE => $this->userPhone,
+            self::USER_CREATED => $this->userCreated,
+            self::USER_SESSION => $this->userSession];
     }
 
     /**

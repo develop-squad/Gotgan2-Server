@@ -2,6 +2,8 @@
 
 class Log {
 
+    const LOG = "logs";
+    const TYPES = "types";
     const LOG_INDEX = "log_index";
     const LOG_PRODUCT = "log_product";
     const LOG_USER = "log_user";
@@ -16,7 +18,8 @@ class Log {
     private $logText;
     private $logTime;
 
-    public function __construct($params) {
+    public function __construct($params = null) {
+        if (!isset($params)) return;
         $this->logIndex = $params[self::LOG_INDEX];
         $this->logProduct = $params[self::LOG_PRODUCT];
         $this->logUser = $params[self::LOG_USER];

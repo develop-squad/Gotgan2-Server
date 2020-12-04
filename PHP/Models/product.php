@@ -2,14 +2,15 @@
 
 class Product {
 
-    const PRODUCT_INDEX = "productIndex";
-    const PRODUCT_GROUP = "productGroup";
-    const PRODUCT_NAME = "productName";
-    const PRODUCT_STATUS = "productStatus";
-    const PRODUCT_OWNER = "productOwner";
-    const PRODUCT_RENT = "productRent";
-    const PRODUCT_BARCODE = "productBarcode";
-    const PRODUCT_CREATED = "productCreated";
+    const PRODUCT = "products";
+    const PRODUCT_INDEX = "product_index";
+    const PRODUCT_GROUP = "product_group";
+    const PRODUCT_NAME = "product_name";
+    const PRODUCT_STATUS = "product_status";
+    const PRODUCT_OWNER = "product_owner";
+    const PRODUCT_RENT = "product_rent";
+    const PRODUCT_BARCODE = "product_barcode";
+    const PRODUCT_CREATED = "product_created";
 
     private $productIndex;
     private $productGroup;
@@ -20,7 +21,8 @@ class Product {
     private $productBarcode;
     private $productCreated;
 
-    public function __construct($params) {
+    public function __construct($params = null) {
+        if (!isset($params)) return;
         $this->productIndex = $params[self::PRODUCT_INDEX];
         $this->productGroup = $params[self::PRODUCT_GROUP];
         $this->productName = $params[self::PRODUCT_NAME];

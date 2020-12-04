@@ -1,10 +1,17 @@
 <?php
 
-$DB_HOST = "localhost";
-$DB_ID = "DB_ID";
-$DB_PW = "DB_PW";
-$DB_NAME = "DB_NAME";
-$DB_PORT = "DB_PORT";
-$MANAGER_KEY = "MANAGER_KEY";
+const DB_HOST = "localhost";
+const DB_ID = "DB_ID";
+const DB_PW = "DB_PW";
+const DB_NAME = "DB_NAME";
+const DB_PORT = "DB_PORT";
+const MANAGER_KEY = "MANAGER_KEY";
+
+const MESSAGE_SYSTEM_OFF = "SYSTEM SWITCH IS OFF";
+const MESSAGE_RENT_OFF = "SYSTEM SWITCH IS OFF";
+const MESSAGE_NOT_ALLOWED = "NOT ALLOWED";
+const MESSAGE_KEY_NOT_VALID = "KEY NOT VALID";
+const MESSAGE_DATE_NOT_VALID = "DATE NOT VALID";
+const MESSAGE_RENT_TARGET_EMPTY = "rent_index OR product_barcode IS NEEDED";
 
 ?>
